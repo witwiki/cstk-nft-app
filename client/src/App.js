@@ -5,7 +5,7 @@ import getWeb3 from "./getWeb3";
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = { storageValue: 0, web3: null, accounts: null, contract: null, balanceValue: 0 };
 
   componentDidMount = async () => {
     try {
@@ -23,9 +23,12 @@ class App extends Component {
         deployedNetwork && deployedNetwork.address,
       );
 
+      var getBal = await web3.eth.getBalance(accounts[0]);
+      var getBalance = web3.utils.fromWei(getBal, 'ether'); 
+
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      this.setState({ web3, accounts, contract: instance, balanceValue: getBalance }, this.runExample);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -56,6 +59,10 @@ class App extends Component {
       <div className="App">
         <h1>Good to Go!</h1>
         <p>Your Truffle Box is installed and ready.</p>
+        <h2>Account: {this.state.accounts[0]}</h2>
+        <h4>
+          Your CSTK: {this.state.balanceValue}
+        </h4>
         <h2>Smart Contract Example</h2>
         <p>
           If your contracts compiled and migrated successfully, below will show
